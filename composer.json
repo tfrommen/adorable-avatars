@@ -1,0 +1,46 @@
+{
+	"name": "tfrommen/adorable-avatars",
+	"description": "This plugin integrates the Adorable Avatars avatar placeholder service into WordPress.",
+	"type": "wordpress-plugin",
+	"keywords": [
+		"avatar",
+		"image",
+		"profile",
+		"user"
+	],
+	"homepage": "https://github.com/tfrommen/adorable-avatars",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Thorsten Frommen",
+			"email": "info@tfrommen.de",
+			"homepage": "http://tfrommen.de",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/tfrommen/adorable-avatars/issues",
+		"source": "https://github.com/tfrommen/adorable-avatars"
+	},
+	"require": {
+		"php": ">=5.4.0",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"php": ">=5.4.0",
+		"10up/wp_mock": "dev-master",
+		"dangoodman/composer-for-wordpress": "~1.0.0",
+		"mockery/mockery": "~0.9.4",
+		"phpunit/phpunit": "~4.8|~5.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"tfrommen\\AdorableAvatars\\": "src/inc/"
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
+	}
+}
