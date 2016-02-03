@@ -2,7 +2,8 @@ Thanks for contributing&mdash;you rock!
 
 # Getting Started
 * Make sure you have a [GitHub account](https://github.com/signup/free).
-* See if your issue has been discussed (or even fixed) earlier. You can [search for existing issues](https://github.com/tfrommen/adorable-avatars/issues?q=is%3Aissue).
+* See if your issue has been discussed (or even fixed) earlier. You can [search for existing
+issues](https://github.com/tfrommen/adorable-avatars/issues?q=is%3Aissue).
 * Assuming it does not already exist, [create a new issue](https://github.com/tfrommen/adorable-avatars/issues/new).
 	* Clearly describe the issue including steps to reproduce when it is a bug.
 	* Make sure you fill in the earliest version that you know has the issue.
@@ -24,4 +25,5 @@ Thanks for contributing&mdash;you rock!
 * Wait for feedback.
 
 # License
-By contributing code to this plugin, you grant its use under the [GNU General Public License v3](http://www.gnu.org/licenses/gpl-3.0.html).
+By contributing code to this plugin, you grant its use under [the MIT License 
+(MIT)](https://opensource.org/licenses/MIT).

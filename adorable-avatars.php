@@ -1,11 +1,11 @@
 <?php # -*- coding: utf-8 -*-
 /**
  * Plugin Name: Adorable Avatars
- * Plugin URI:  https://github.com/tfrommen/adorable-avatars
+ * Plugin URI:  https://wordpress.org/plugins/adorable-avatars/
  * Description: This plugin integrates the Adorable Avatars avatar placeholder service into WordPress.
  * Author:      Thorsten Frommen
  * Author URI:  http://tfrommen.de
- * Version:     1.0.0
+ * Version:     1.1.0
  * Text Domain: adorable-avatars
  * License:     MIT
  */

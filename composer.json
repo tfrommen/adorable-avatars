@@ -20,6 +20,7 @@
 	],
 	"support": {
 		"issues": "https://github.com/tfrommen/adorable-avatars/issues",
+		"forum": "https://wordpress.org/support/plugin/adorable-avatars",
 		"source": "https://github.com/tfrommen/adorable-avatars"
 	},
 	"require": {
@@ -40,7 +41,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "1.0.x-dev"
+			"dev-master": "1.1.x-dev"
 		}
 	}
 }
