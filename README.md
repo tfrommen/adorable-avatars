@@ -1,9 +1,10 @@
 # Adorable Avatars
 
-[![Latest Stable Version](https://poser.pugx.org/tfrommen/adorable-avatars/v/stable)](https://packagist.org/packages/tfrommen/adorable-avatars)
-[![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
-[![Build Status](https://travis-ci.org/tfrommen/adorable-avatars.svg?branch=master)](http://travis-ci.org/tfrommen/adorable-avatars)
-[![License](https://poser.pugx.org/tfrommen/adorable-avatars/license)](https://packagist.org/packages/tfrommen/adorable-avatars)
+[![Version](https://img.shields.io/packagist/v/tfrommen/adorable-avatars.svg)](https://packagist.org/packages/tfrommen/adorable-avatars)
+[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/tfrommen/adorable-avatars)
+[![Build](https://img.shields.io/travis/tfrommen/adorable-avatars.svg)](http://travis-ci.org/tfrommen/adorable-avatars)
+[![Downloads](https://img.shields.io/packagist/dt/tfrommen/adorable-avatars.svg)](https://packagist.org/packages/tfrommen/adorable-avatars)
+[![License](https://img.shields.io/packagist/l/tfrommen/adorable-avatars.svg)](https://packagist.org/packages/tfrommen/adorable-avatars)
 
 > This plugin integrates the [Adorable Avatars](http://avatars.adorable.io/) avatar placeholder service into WordPress.
 
