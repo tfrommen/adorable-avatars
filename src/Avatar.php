@@ -26,7 +26,7 @@ class Avatar {
 	/**
 	 * @var string
 	 */
-	private $url = 'http://api.adorable.io/avatars/';
+	private $url = '//api.adorable.io/avatars/';
 
 	/**
 	 * Adds "Adorable Avatar" to the default avatars.
