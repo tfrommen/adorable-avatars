@@ -1,38 +1,37 @@
 {
-	"name": "adorable-avatars",
-	"version": "1.1.0",
-	"description": "This plugin integrates the Adorable Avatars avatar placeholder service into WordPress.",
-	"keywords": [
-		"avatar",
-		"image",
-		"profile",
-		"user"
-	],
-	"homepage": "https://github.com/tfrommen/adorable-avatars",
-	"bugs": "https://github.com/tfrommen/adorable-avatars/issues",
-	"license": "MIT",
-	"author": {
-		"name": "Thorsten Frommen",
-		"email": "info@tfrommen.de",
-		"url": "http://tfrommen.de"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/tfrommen/adorable-avatars"
-	},
-	"devDependencies": {
-		"grunt": "~0.4.5",
-		"grunt-contrib-imagemin": "~1.0.0",
-		"grunt-contrib-jshint": "~0.11.3",
-		"grunt-contrib-watch": "~0.6.1",
-		"grunt-jscs": "~2.3.0",
-		"grunt-jsonlint": "~1.0.6",
-		"grunt-jsvalidate": "~0.2.2",
-		"grunt-lineending": "~0.2.4",
-		"grunt-newer": "~1.1.1",
-		"grunt-phplint": "~0.0.5",
-		"grunt-travis-lint": "~0.0.3",
-		"jshint-stylish": "~2.1.0",
-		"load-grunt-tasks": "~3.3.0"
-	}
+  "name": "adorable-avatars",
+  "version": "2.0.0",
+  "description": "This plugin integrates the Adorable Avatars avatar placeholder service into WordPress.",
+  "keywords": [
+    "avatar",
+    "image",
+    "profile",
+    "user"
+  ],
+  "homepage": "https://github.com/tfrommen/adorable-avatars",
+  "bugs": "https://github.com/tfrommen/adorable-avatars/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Thorsten Frommen",
+    "email": "info@tfrommen.de",
+    "url": "https://tfrommen.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tfrommen/adorable-avatars"
+  },
+  "devDependencies": {
+    "eslint": "^3.9.1",
+    "eslint-config-inpsyde": "^1.3.0",
+    "grunt": ">=0.4.5",
+    "grunt-contrib-imagemin": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-jsonlint": "^1.1.0",
+    "grunt-lineending": "^1.0.0",
+    "grunt-newer": "^1.2.0",
+    "grunt-phplint": "~0.0.5",
+    "grunt-shell": "^2.0.0",
+    "grunt-zip": "^0.17.1",
+    "load-grunt-tasks": "^3.5.0"
+  }
 }

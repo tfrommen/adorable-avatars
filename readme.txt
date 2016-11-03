@@ -2,8 +2,8 @@
 Contributors: tfrommen
 Tags: avatar, image, profile, user
 Requires at least: 2.9.0
-Tested up to: 4.4
-Stable tag: v1.1.0
+Tested up to: 4.6
+Stable tag: v2.0.0
 
 This plugin integrates the Adorable Avatars avatar placeholder service into WordPress.
 
@@ -36,6 +36,9 @@ This plugin requires **PHP 5.4**.
 1. **Default Avatar setting** - Here you can select _Adorable Avatars_ as default avatar setting.
 
 == Changelog ==
+
+= 2.0.0 =
+* Complete refactor.
 
 = 1.1.0 =
 * WordPress.org release.

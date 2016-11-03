@@ -1,18 +1,27 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace tfrommen\AdorableAvatars\Avatar;
+namespace tfrommen\AdorableAvatars;
+
+use WP_Comment;
+use WP_Post;
+use WP_User;
 
 /**
  * The avatar model.
  *
  * @package tfrommen\AdorableAvatars
+ * @since   2.0.0
  */
 class Avatar {
 
 	/**
+	 * Avatar name.
+	 *
+	 * @since 2.0.0
+	 *
 	 * @var string
 	 */
-	private $default;
+	const NAME = 'adorable';
 
 	/**
 	 * @var string
@@ -20,18 +29,26 @@ class Avatar {
 	private $url = 'http://api.adorable.io/avatars/';
 
 	/**
-	 * Constructor. Sets up the properties.
+	 * Adds "Adorable Avatar" to the default avatars.
 	 *
-	 * @param AvatarDefault $avatar_default Avatar default model.
+	 * @since   2.0.0
+	 * @wp-hook avatar_defaults
+	 *
+	 * @param string[] $defaults Array of default avatars.
+	 *
+	 * @return string[] Array of default avatars, includeing "Adorable Avatar".
 	 */
-	public function __construct( AvatarDefault $avatar_default ) {
+	public function add_to_defaults( array $defaults ) {
 
-		$this->default = $avatar_default->get_value();
+		$defaults = [ self::NAME => __( 'Adorable Avatar (Generated)', 'adorable-avatars' ) ] + $defaults;
+
+		return $defaults;
 	}
 
 	/**
-	 * Returns the avatar image tag.
+	 * Filters the avatar image tag.
 	 *
+	 * @since   2.0.0
 	 * @wp-hook get_avatar
 	 *
 	 * @param string $avatar      Avatar image tag.
@@ -41,11 +58,15 @@ class Avatar {
 	 * @param string $alt         Alternative text to use in the avatar image tag.
 	 * @param array  $args        Avatar args.
 	 *
-	 * @return mixed
+	 * @return string Filtered avatar image tag.
 	 */
-	public function get( $avatar, $id_or_email, $size, $default, $alt, array $args ) {
+	public function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, array $args ) {
 
-		if ( $this->default !== $default ) {
+		if ( self::NAME !== $default ) {
+			return $avatar;
+		}
+
+		if ( ! ( empty( $args['found_avatar'] ) || $args['force_default'] ) ) {
 			return $avatar;
 		}
 
@@ -53,12 +74,12 @@ class Avatar {
 
 		$avatar = sprintf(
 			'<img src="%1$s" srcset="%2$s 2x" width="%3$d" height="%3$d" class="%4$s" alt="%5$s" %6$s>',
-			$urls[0],
-			$urls[1],
-			$size,
-			$this->get_class_value( $size, $args ),
+			esc_url( $urls[0] ),
+			esc_url( $urls[1] ),
+			esc_attr( $size ),
+			esc_attr( $this->get_class_value( $size, $args ) ),
 			esc_attr( $alt ),
-			$args['extra_attr']
+			isset( $args['extra_attr'] ) ? $args['extra_attr'] : ''
 		);
 
 		return $avatar;
@@ -70,17 +91,16 @@ class Avatar {
 	 * @param mixed $identifier User identifier.
 	 * @param int   $size       Avatar size.
 	 *
-	 * @return string[]
+	 * @return string[] The URLs of the standard and retina quality avatar images.
 	 */
 	private function get_urls( $identifier, $size ) {
 
-		$urls = array();
-
 		$identifier = $this->get_identifier( $identifier );
 
-		foreach ( array( 1, 2 ) as $factor ) {
-			$urls[] = esc_url( $this->url . ( $size * $factor ) . "/$identifier.png" );
-		}
+		$urls = array_map( function ( $factor ) use ( $identifier, $size ) {
+
+			return $this->url . ( $size * $factor ) . "/$identifier.png";
+		}, [ 1, 2 ] );
 
 		return $urls;
 	}
@@ -90,26 +110,25 @@ class Avatar {
 	 *
 	 * @param mixed $identifier User identifier.
 	 *
-	 * @return string
+	 * @return string The identifier string for the given user identifier.
 	 */
 	private function get_identifier( $identifier ) {
 
 		if ( is_numeric( $identifier ) ) {
 			$identifier = get_user_by( 'id', $identifier );
-		} elseif ( $identifier instanceof \WP_Post ) {
+		} elseif ( $identifier instanceof WP_Post ) {
 			$identifier = get_user_by( 'id', $identifier->post_author );
-		} elseif ( $identifier instanceof \WP_Comment ) {
+		} elseif ( $identifier instanceof WP_Comment ) {
 			$identifier = get_user_by( 'id', $identifier->user_id );
 		}
 
-		if ( $identifier instanceof \WP_User ) {
+		if ( $identifier instanceof WP_User ) {
 			$identifier = $identifier->user_email;
 		} elseif ( ! is_string( $identifier ) ) {
 			return '';
 		}
 
-		$identifier = strtolower( $identifier );
-		$identifier = md5( $identifier );
+		$identifier = md5( strtolower( $identifier ) );
 
 		return $identifier;
 	}
@@ -120,28 +139,25 @@ class Avatar {
 	 * @param int   $size Avatar size.
 	 * @param array $args Avatar args.
 	 *
-	 * @return string
+	 * @return string The avatar HTML class attribute value
 	 */
 	private function get_class_value( $size, array $args ) {
 
-		$class = array(
+		$class = [
 			'avatar',
 			"avatar-$size",
 			'adorable-avatar',
 			'photo',
-		);
+		];
 
-		if ( ! $args['found_avatar'] || $args['force_default'] ) {
+		if ( empty( $args['found_avatar'] ) || $args['force_default'] ) {
 			$class[] = 'avatar-default';
 		}
 
-		if ( $args['class'] ) {
-			$class = array_merge( $class, (array) $args['class'] );
+		if ( ! empty( $args['class'] ) ) {
+			$class = array_unique( array_merge( $class, (array) $args['class'] ) );
 		}
 
-		$class_value = join( ' ', $class );
-		$class_value = esc_attr( $class_value );
-
-		return $class_value;
+		return join( ' ', $class );
 	}
 }

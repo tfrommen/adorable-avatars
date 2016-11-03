@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/tfrommen/adorable-avatars.svg?branch=master)](http://travis-ci.org/tfrommen/adorable-avatars)
 [![License](https://poser.pugx.org/tfrommen/adorable-avatars/license)](https://packagist.org/packages/tfrommen/adorable-avatars)
 
-This plugin integrates the [Adorable Avatars](http://avatars.adorable.io/) avatar placeholder service into WordPress.
+> This plugin integrates the [Adorable Avatars](http://avatars.adorable.io/) avatar placeholder service into WordPress.
 
 ## Installation
 
@@ -28,6 +28,8 @@ Of course, you can also provide me with
 [translations](https://translate.wordpress.org/projects/wp-plugins/adorable-avatars) if you would like to use the plugin
 in another not yet included language.
 
-## Changelog
+## License
 
-[Changelog](CHANGELOG.md)
+Copyright (c) 2016 Thorsten Frommen
+
+This code is licensed under the [MIT License](LICENSE).

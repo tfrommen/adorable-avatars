@@ -1,23 +1,41 @@
-/* jshint node:true */
-module.exports = function( grunt ) {
-	'use strict';
+const loadGrundModules = require( 'load-grunt-tasks' );
 
-	var configObject = {
+module.exports = function ( grunt ) {
+	grunt.initConfig( {
 		config: {
 			assets: {
 				src: 'resources/assets/',
-				dest: 'assets/'
+				dest: 'svn-assets/'
 			},
+
+			slug: 'adorable-avatars',
+
 			src: 'src/',
+
 			tests: {
-				phpunit: 'tests/phpunit/'
+				php: 'tests/php/'
 			}
 		},
 
+		/**
+		 * @see {@link https://github.com/sindresorhus/grunt-eslint grunt-eslint}
+		 * @see {@link https://github.com/eslint/eslint ESLint}
+		 */
+		eslint: {
+			gruntfile: {
+				src: [ 'Gruntfile.js' ]
+			}
+		},
+
+		/**
+		 * @see {@link https://github.com/gruntjs/grunt-contrib-imagemin grunt-contrib-imagemin}
+		 * @see {@link https://github.com/imagemin/imagemin imagemin}
+		 */
 		imagemin: {
 			options: {
 				optimizationLevel: 7
 			},
+
 			assets: {
 				expand: true,
 				cwd: '<%= config.assets.src %>',
@@ -26,164 +44,128 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		jscs: {
-			options: {
-				config: true
-			},
-			grunt: {
-				src: [ 'Gruntfile.js' ]
-			}
-		},
-
-		jshint: {
-			options: {
-				jshintrc: true,
-				reporter: require( 'jshint-stylish' )
-			},
-			grunt: {
-				src: [ 'Gruntfile.js' ]
-			}
-		},
-
+		/**
+		 * @see {@link https://github.com/brandonramirez/grunt-jsonlint grunt-jsonlint}
+		 * @see {@link https://github.com/zaach/jsonlint JSON Lint}
+		 */
 		jsonlint: {
-			configs: {
-				src: [ '.{jscs,jshint}rc' ]
+			options: {
+				indent: 2
 			},
+
+			configs: {
+				src: [ '.*rc' ]
+			},
+
 			json: {
 				src: [ '*.json' ]
 			}
 		},
 
-		jsvalidate: {
-			options: {
-				globals: {},
-				esprimaOptions: {},
-				verbose: false
-			},
-			grunt: {
-				src: [ 'Gruntfile.js' ]
-			}
-		},
-
+		/**
+		 * @see {@link https://github.com/suisho/grunt-lineending grunt-lineending}
+		 */
 		lineending: {
 			options: {
 				eol: 'lf',
 				overwrite: true
 			},
-			grunt: {
-				src: [ 'Gruntfile.js' ]
-			}
-		},
 
-		phplint: {
+			github: {
+				src: [ '.github/*' ]
+			},
+
+			root: {
+				src: [ '*' ]
+			},
+
 			src: {
 				src: [ '<%= config.src %>**/*.php' ]
 			},
+
 			tests: {
-				src: [ '<%= config.tests.phpunit %>**/*.php' ]
+				src: [
+					'<%= config.tests.php %>**/*.php'
+				]
 			}
 		},
 
-		watch: {
-			options: {
-				dot: true,
-				spawn: true,
-				interval: 2000
+		/**
+		 * @see {@link https://github.com/jgable/grunt-phplint grunt-phplint}
+		 */
+		phplint: {
+			root: {
+				src: [ '*.php' ]
 			},
 
-			assets: {
-				files: [ '<%= config.assets.src %>*.{gif,jpeg,jpg,png}' ],
-				tasks: [
-					'imagemin:assets'
-				]
+			src: {
+				src: [ '<%= config.src %>**/*.php' ]
 			},
 
-			configs: {
-				files: [ '.{jscs,jshint}rc' ],
-				tasks: [
-					'newer:jsonlint:configs'
-				]
-			},
+			tests: {
+				src: [ '<%= config.tests.php %>**/*.php' ]
+			}
+		},
 
-			grunt: {
-				files: [ 'Gruntfile.js' ],
-				tasks: [
-					'newer:jscs:grunt',
-					'newer:jshint:grunt',
-					'newer:lineending:grunt',
-					'newer:jsvalidate:grunt'
-				]
-			},
+		/**
+		 * @see {@link https://github.com/sindresorhus/grunt-shell grunt-shell}
+		 */
+		shell: {
+			phpunit: {
+				command: 'phpunit'
+			}
+		},
 
-			json: {
-				files: [ '*.json' ],
-				tasks: [
-					'newer:jsonlint:json'
-				]
-			},
-
-			php: {
-				files: [
-					'<%= config.src %>**/*.php',
-					'<%= config.tests.phpunit %>**/*.php'
+		/**
+		 * @see {@link https://github.com/twolfson/grunt-zip grunt-zip}
+		 */
+		zip: {
+			release: {
+				src: [
+					'*.{php,txt}',
+					'<%= config.src %>**/*.php'
 				],
-				tasks: [
-					'newer:phplint',
-					'phpunit'
-				]
-			},
-
-			travis: {
-				files: [ '.travis.yml' ],
-				tasks: [
-					'travis-lint'
-				]
+				dest: '<%= config.slug %>.zip',
+				router( filepath ) {
+					return grunt.template.process( `<%= config.slug %>/${filepath}` );
+				}
 			}
 		}
-	};
-
-	require( 'load-grunt-tasks' )( grunt );
-
-	grunt.initConfig( configObject );
-
-	// PHPUnit task.
-	grunt.registerTask( 'phpunit', function() {
-		grunt.util.spawn( {
-			cmd: 'phpunit',
-			opts: {
-				stdio: 'inherit'
-			}
-		}, this.async() );
 	} );
 
-	grunt.registerTask( 'assets', configObject.watch.assets.tasks );
-
-	grunt.registerTask( 'configs', configObject.watch.configs.tasks );
-
-	grunt.registerTask( 'grunt', configObject.watch.grunt.tasks );
-
-	grunt.registerTask( 'json', configObject.watch.json.tasks );
-
-	grunt.registerTask( 'php', configObject.watch.php.tasks );
-
-	grunt.registerTask( 'travis', configObject.watch.travis.tasks );
+	/**
+	 * @see {@link https://github.com/sindresorhus/load-grunt-tasks load-grunt-tasks}
+	 */
+	loadGrundModules( grunt );
 
 	grunt.registerTask( 'common', [
-		'configs',
-		'grunt',
-		'json',
-		'php',
-		'travis'
+		'jsonlint',
+		'phplint',
+		'shell:phpunit',
+		'eslint'
+	] );
+
+	grunt.registerTask( 'ci', [
+		'common'
 	] );
 
 	grunt.registerTask( 'develop', [
-		'common'
+		'newer:jsonlint',
+		'newer:eslint',
+		'newer:phplint:src',
+		'newer:lineending'
 	] );
 
 	grunt.registerTask( 'pre-commit', [
 		'newer-clean',
+		'imagemin',
 		'common',
-		'assets'
+		'lineending'
+	] );
+
+	grunt.registerTask( 'release', [
+		'pre-commit',
+		'zip:release'
 	] );
 
 	grunt.registerTask( 'default', 'develop' );
