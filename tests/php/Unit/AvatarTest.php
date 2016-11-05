@@ -248,6 +248,11 @@ class AvatarTest extends TestCase {
 				'identifier'  => $identifier,
 				'user'        => $user,
 			],
+			'user'           => [
+				'id_or_email' => $user,
+				'identifier'  => $identifier,
+				'user'        => $user,
+			],
 		];
 	}
 
