@@ -17,7 +17,7 @@
 
 ## Screenshots
 
-![Setting](resources/assets/screenshot-1.png)  
+![Setting](resources/assets/screenshot-1.jpg)  
 **Default Avatar setting** - Here you can select _Adorable Avatars_ as default avatar setting.
 
 ## Contribution
