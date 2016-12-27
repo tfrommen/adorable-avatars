@@ -66,7 +66,7 @@ class Avatar {
 			return $avatar;
 		}
 
-		if ( ! ( empty( $args['found_avatar'] ) || $args['force_default'] ) ) {
+		if ( ! ( $args['found_avatar'] || $args['force_default'] ) ) {
 			return $avatar;
 		}
 
@@ -116,10 +116,14 @@ class Avatar {
 
 		if ( is_numeric( $identifier ) ) {
 			$identifier = get_user_by( 'id', $identifier );
-		} elseif ( $identifier instanceof WP_Post ) {
-			$identifier = get_user_by( 'id', $identifier->post_author );
-		} elseif ( $identifier instanceof WP_Comment ) {
-			$identifier = get_user_by( 'id', $identifier->user_id );
+		} elseif( is_object( $identifier ) ) {
+			if ( $identifier instanceof WP_Post ) {
+				$identifier = get_user_by( 'id', $identifier->post_author );
+			} elseif ( ! empty( $identifier->user_id ) ) {
+				$identifier = get_user_by( 'id', $identifier->user_id );
+			} elseif ( ! empty( $identifier->comment_author_email ) ) {
+				$identifier = $identifier->comment_author_email;
+			}
 		}
 
 		if ( $identifier instanceof WP_User ) {
