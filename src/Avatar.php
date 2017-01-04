@@ -26,7 +26,7 @@ class Avatar {
 	/**
 	 * @var string
 	 */
-	private $url = '//api.adorable.io/avatars/';
+	private $url = 'api.adorable.io/avatars/';
 
 	/**
 	 * Adds "Adorable Avatar" to the default avatars.
@@ -46,29 +46,37 @@ class Avatar {
 	}
 
 	/**
-	 * Filters the avatar image tag.
+	 * Replaces the complete avatar image tag.
 	 *
-	 * @since   2.0.0
-	 * @wp-hook get_avatar
+	 * @since   2.1.0
+	 * @wp-hook pre_get_avatar
 	 *
-	 * @param string $avatar      Avatar image tag.
-	 * @param mixed  $id_or_email User identifier.
-	 * @param int    $size        Avatar size.
-	 * @param string $default     Avatar key.
-	 * @param string $alt         Alternative text to use in the avatar image tag.
-	 * @param array  $args        Avatar args.
+	 * @param string|null $avatar      Avatar image tag.
+	 * @param mixed       $id_or_email User identifier.
+	 * @param array       $args        Avatar args.
 	 *
-	 * @return string Filtered avatar image tag.
+	 * @return string|null Avatar image tag.
 	 */
-	public function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, array $args ) {
+	public function replace_avatar( $avatar, $id_or_email, array $args ) {
 
-		if ( self::NAME !== $default ) {
+		if ( $args['default'] && self::NAME !== $args['default'] ) {
 			return $avatar;
 		}
 
-		if ( ! ( empty( $args['found_avatar'] ) || $args['force_default'] ) ) {
+		/**
+		 * Filters whether or not Adorable Avatars should be forced to display.
+		 *
+		 * @since 2.1.0
+		 *
+		 * @param bool  $force       Force Adorable Avatars?
+		 * @param mixed $id_or_email User identifier.
+		 * @param array $args        Avatar args.
+		 */
+		if ( ! apply_filters( 'adorable_avatars.force', false, $id_or_email, $args ) ) {
 			return $avatar;
 		}
+
+		$size = $args['size'];
 
 		$urls = $this->get_urls( $id_or_email, $size );
 
@@ -78,9 +86,35 @@ class Avatar {
 			esc_url( $urls[1] ),
 			esc_attr( $size ),
 			esc_attr( $this->get_class_value( $size, $args ) ),
-			esc_attr( $alt ),
+			esc_attr( $args['alt'] ),
 			isset( $args['extra_attr'] ) ? $args['extra_attr'] : ''
 		);
+
+		return $avatar;
+	}
+
+	/**
+	 * Replaces the avatar default image.
+	 *
+	 * @since   2.1.0
+	 * @wp-hook get_avatar
+	 *
+	 * @param string $avatar      Avatar image tag.
+	 * @param mixed  $id_or_email User identifier.
+	 * @param int    $size        Avatar size.
+	 * @param string $default     Avatar key.
+	 *
+	 * @return string Avatar image tag.
+	 */
+	public function replace_default( $avatar, $id_or_email, $size, $default ) {
+
+		if ( self::NAME !== $default ) {
+			return $avatar;
+		}
+
+		$urls = $this->get_urls( $id_or_email, $size );
+
+		$avatar = preg_replace( '~([?&;]d\=)' . self::NAME . '(&.*)?$~', '$1' . urlencode( $urls[0] ) . '$2', $avatar );
 
 		return $avatar;
 	}
@@ -97,9 +131,11 @@ class Avatar {
 
 		$identifier = $this->get_identifier( $identifier );
 
-		$urls = array_map( function ( $factor ) use ( $identifier, $size ) {
+		$protocol = is_ssl() ? 'https' : 'http';
 
-			return $this->url . ( $size * $factor ) . "/$identifier.png";
+		$urls = array_map( function ( $factor ) use ( $identifier, $protocol, $size ) {
+
+			return "{$protocol}://{$this->url}" . ( $size * $factor ) . "/$identifier.png";
 		}, [ 1, 2 ] );
 
 		return $urls;
@@ -119,7 +155,9 @@ class Avatar {
 		} elseif ( $identifier instanceof WP_Post ) {
 			$identifier = get_user_by( 'id', $identifier->post_author );
 		} elseif ( $identifier instanceof WP_Comment ) {
-			$identifier = get_user_by( 'id', $identifier->user_id );
+			$identifier = 0 < $identifier->user_id
+				? get_user_by( 'id', $identifier->user_id )
+				: $identifier->comment_author_email;
 		}
 
 		if ( $identifier instanceof WP_User ) {
@@ -128,7 +166,7 @@ class Avatar {
 			return '';
 		}
 
-		$identifier = md5( strtolower( $identifier ) );
+		$identifier = md5( strtolower( trim( $identifier ) ) );
 
 		return $identifier;
 	}

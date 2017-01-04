@@ -5,7 +5,7 @@
  * Description: This plugin integrates the Adorable Avatars avatar placeholder service into WordPress.
  * Author:      Thorsten Frommen
  * Author URI:  https://tfrommen.de
- * Version:     2.0.0
+ * Version:     2.1.0
  * Text Domain: adorable-avatars
  * License:     MIT
  */
@@ -35,7 +35,8 @@ function bootstrap() {
 
 	$avatar = new Avatar();
 	add_filter( 'avatar_defaults', [ $avatar, 'add_to_defaults' ] );
-	add_filter( 'get_avatar', [ $avatar, 'filter_avatar' ], 10, 6 );
+	add_filter( 'pre_get_avatar', [ $avatar, 'replace_avatar' ], 10, 3 );
+	add_filter( 'get_avatar', [ $avatar, 'replace_default' ], 10, 4 );
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\bootstrap' );
