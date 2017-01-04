@@ -123,10 +123,13 @@ module.exports = function ( grunt ) {
 			release: {
 				src: [
 					'*.{php,txt}',
+					'LICENSE',
 					'<%= config.src %>**/*.php'
 				],
 				dest: '<%= config.slug %>.zip',
 				router( filepath ) {
+					filepath = 'LICENSE' === filepath ? 'license.txt' : filepath;
+
 					return grunt.template.process( `<%= config.slug %>/${filepath}` );
 				}
 			}
@@ -140,9 +143,9 @@ module.exports = function ( grunt ) {
 
 	grunt.registerTask( 'common', [
 		'jsonlint',
+		'eslint',
 		'phplint',
-		'shell:phpunit',
-		'eslint'
+		'shell:phpunit'
 	] );
 
 	grunt.registerTask( 'ci', [
